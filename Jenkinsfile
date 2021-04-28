@@ -2,11 +2,17 @@ pipeline{
   agent{ label 'docker' }
 
   stages{
+    stage("start pipeline"){
+      steps{
+        slackSend color: '#FFFF00', message: "STARTED   :large_yellow_square:   --->   Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+      }
+    }
+
     stage("build docker image and push it into docker hub"){
 
       environment{
-	DOCKER_USER = credentials('docker-username')
-	DOCKER_PASS = credentials('docker-password')
+	      DOCKER_USER = credentials('docker-username')
+	      DOCKER_PASS = credentials('docker-password')
       }
 
       steps{
@@ -21,9 +27,19 @@ pipeline{
     stage("delete unnecessary images"){
       steps{
         sh "docker rmi gotechnies/php-5.6-alpine:latest"
-	sh "docker rmi novinano_ts:v1"
-	sh "docker rmi cimbel/novinano_ts:v1"
+	      sh "docker rmi novinano_ts:v1"
+	      sh "docker rmi cimbel/novinano_ts:v1"
       }
+    }
+  }
+
+  post {
+    success{
+      slackSend color: '#00ff37', message: "SUCCESS   :large_green_square:   --->   Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
+      }
+
+    failure{
+      slackSend color: '#FF0000', message: "FAILED   :large_red_square:   --->   Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
     }
   }
 }
