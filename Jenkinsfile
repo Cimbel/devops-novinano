@@ -11,8 +11,8 @@ pipeline{
     stage("build docker image and push it into docker hub"){
 
       environment{
-	      DOCKER_USER = credentials('docker-username')
-	      DOCKER_PASS = credentials('docker-password')
+	DOCKER_USER = credentials('docker-username')
+	DOCKER_PASS = credentials('docker-password')
       }
 
       steps{
@@ -24,11 +24,12 @@ pipeline{
       }
     }
 
-    stage("delete unnecessary images"){
+    stage("clean workspace"){
       steps{
         sh "docker rmi gotechnies/php-5.6-alpine:latest"
-	      sh "docker rmi novinano_ts:v1"
-	      sh "docker rmi cimbel/novinano_ts:v1"
+	sh "docker rmi novinano_ts:v1"
+	sh "docker rmi cimbel/novinano_ts:v1"
+	sh "rm -rf ./*"
       }
     }
   }
