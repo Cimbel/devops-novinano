@@ -1,2 +1,2 @@
 # devops-novinano
-novinano version ts cool tesjjt
+novinano version ts cool tessdfjjt
