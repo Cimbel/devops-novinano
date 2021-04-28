@@ -1,2 +1,2 @@
 # devops-novinano
-novinano version ts
+novinano version ts class
