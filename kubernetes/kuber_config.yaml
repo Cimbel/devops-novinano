@@ -2,16 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: novinano-deployment
+  name: database-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      project: novinano-project
+      database_mysql: db-mysql
   template:
     metadata:
       labels:
-        project: novinano-project
+        database_mysql: db-mysql
     spec:
       containers:
         - name: database
@@ -26,7 +26,23 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               value: root
           ports:
-            - containerPort: 3306
+            - containerPort: 3306   
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: novinano-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: novinano-project
+  template:
+    metadata:
+      labels:
+        project: novinano-project
+    spec:
+      containers:
         - name: novinano
           image: cimbel/novinanots:v1
           ports:
