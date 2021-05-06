@@ -18,7 +18,7 @@ spec:
           image: mysql:5.6
           env:
             - name: MYSQL_DATABASE
-              value: novinano_project
+              value: project
             - name: MYSQL_USER
               value: test
             - name: MYSQL_PASSWORD
@@ -26,5 +26,10 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               value: root
           ports:
-            - containerPort: 3306   
+            - containerPort: 3306
+        - name: novinano
+          image: cimbel/novinanots:v1
+          ports:
+            - containerPort: 80
+            - containerPort: 443   
 ---
