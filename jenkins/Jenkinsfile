@@ -2,13 +2,7 @@ pipeline{
   agent{ label 'docker' }
 
   stages{
-    stage("start pipeline"){
-      steps{
-        slackSend color: '#FFFF00', message: "STARTED   :large_yellow_square:   --->   Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-      }
-    }
-
-    stage("build docker image and push it into docker hub"){
+    stage("build docker image"){
 
       environment{
 	DOCKER_USER = credentials('docker-username')
@@ -16,6 +10,7 @@ pipeline{
       }
 
       steps{
+       slackSend color: '#FFFF00', message: "STARTED   :large_yellow_square:   --->   Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
        sh "docker login -u \$DOCKER_USER -p \$DOCKER_PASS"
        sh "docker build -t novinano_ts:v1 ."
        sh "docker tag novinano_ts:v1 \$DOCKER_USER/novinano_ts:v1"
