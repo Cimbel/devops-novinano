@@ -22,8 +22,8 @@ pipeline{
     stage("clean workspace"){
       steps{
         sh "docker rmi gotechnies/php-5.6-alpine:latest"
-	sh "docker rmi novinano_ts:v1"
-	sh "docker rmi cimbel/novinano_ts:v1"
+	sh "docker rmi novinanots:v1"
+	sh "docker rmi cimbel/novinanots:v1"
 	sh "rm -rf ./*"
       }
     }
