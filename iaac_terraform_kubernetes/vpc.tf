@@ -6,6 +6,13 @@ resource "aws_vpc" "novinano-vpc" {
 }
 
 
+resource "aws_internet_gateway" "novinano-igw" {
+  vpc_id = aws_vpc.novinano-vpc.id
+
+  tags = { Name = "novinano-igw" }
+}
+
+
 resource "aws_subnet" "novinano-public-subnet-a1" {
   cidr_block              = "10.0.11.0/24"
   vpc_id                  = aws_vpc.novinano-vpc.id
