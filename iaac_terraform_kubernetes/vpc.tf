@@ -118,3 +118,21 @@ resource "aws_eip" "novinano-nat-1" {
 resource "aws_eip" "novinano-nat-2" {
   depends_on = [aws_internet_gateway.novinano-igw]
 }
+
+
+# nat-gateways
+
+resource "aws_nat_gateway" "novinano-public-1a" {
+  allocation_id = aws_eip.novinano-nat-1.id
+  subnet_id     = aws_subnet.novinano-public-subnet-a1.id
+
+  tags = { Name = "nat-1a" }
+}
+
+
+resource "aws_nat_gateway" "novinano-public-1b" {
+  allocation_id = aws_eip.novinano-nat-2.id
+  subnet_id     = aws_subnet.novinano-public-subnet-b1.id
+
+  tags = { Name = "nat-1b" }
+}
