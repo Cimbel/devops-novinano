@@ -50,7 +50,11 @@ resource "aws_subnet" "novinano-public-subnet-a1" {
   map_public_ip_on_launch = true
   availability_zone       = data.aws_availability_zones.available.names[0]
 
-  tags = { Name = "novinano-public-subnet-a1" }
+  tags = {
+    Name                        = "novinano-public-subnet-us-east-1a"
+    "kubernetes.io/cluster/eks" = "shared"
+    "kubernetes.io/role/elb"    = 1
+  }
 }
 
 
@@ -60,5 +64,9 @@ resource "aws_subnet" "novinano-public-subnet-b1" {
   map_public_ip_on_launch = true
   availability_zone       = data.aws_availability_zones.available.names[1]
 
-  tags = { Name = "novinano-public-subnet-b1" }
+  tags = {
+    Name                        = "novinano-public-subnet-us-east-b1"
+    "kubernetes.io/cluster/eks" = "shared"
+    "kubernetes.io/role/elb"    = 1
+  }
 }
