@@ -73,8 +73,36 @@ resource "aws_subnet" "novinano-public-subnet-b1" {
   availability_zone       = data.aws_availability_zones.available.names[1]
 
   tags = {
-    Name                        = "novinano-public-subnet-us-east-b1"
+    Name                        = "novinano-public-subnet-us-east-1b"
     "kubernetes.io/cluster/eks" = "shared"
     "kubernetes.io/role/elb"    = 1
+  }
+}
+
+
+# private_subnets
+
+resource "aws_subnet" "novinano-private-subnet-a1" {
+  cidr_block        = "10.0.12.0/24"
+  vpc_id            = local.novinano_vpc_id
+  availability_zone = data.aws_availability_zones.available.names[0]
+
+  tags = {
+    Name                              = "novinano-private-subnet-us-east-1a"
+    "kubernetes.io/cluster/eks"       = "shared"
+    "kubernetes.io/role/internal-elb" = 1
+  }
+}
+
+
+resource "aws_subnet" "novinano-private-subnet-b1" {
+  cidr_block        = "10.0.22.0/24"
+  vpc_id            = local.novinano_vpc_id
+  availability_zone = data.aws_availability_zones.available.names[1]
+
+  tags = {
+    Name                              = "novinano-private-subnet-us-east-1b"
+    "kubernetes.io/cluster/eks"       = "shared"
+    "kubernetes.io/role/internal-elb" = 1
   }
 }
