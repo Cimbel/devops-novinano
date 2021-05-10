@@ -51,7 +51,7 @@ resource "aws_iam_role" "novinano-eks-cluster-node-group-role" {
     {
       "Effect": "Allow",
       "Principal": {
-        "Service": "eks.amazonaws.com"
+        "Service": "ec2.amazonaws.com"
       },
       "Action": "sts:AssumeRole"
     }
