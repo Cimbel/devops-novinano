@@ -3,6 +3,8 @@ resource "aws_eks_node_group" "novinano-eks-cluster-node-group" {
   node_group_name = "novinano-eks-cluster-node-group"
   node_role_arn   = aws_iam_role.novinano-eks-cluster-node-group-role.arn
   instance_types  = ["t2.micro"]
+  disk_size       = 8
+
   subnet_ids = [
     aws_subnet.novinano-public-subnet-a1.id,
     aws_subnet.novinano-public-subnet-b1.id
