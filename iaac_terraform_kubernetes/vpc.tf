@@ -38,6 +38,30 @@ resource "aws_route_table" "novinano-public-subnets-route-table" {
 }
 
 
+resource "aws_route_table" "novinano-private-subnets-route-table-1" {
+  vpc_id = local.novinano_vpc_id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.novinano-public-1a.id
+  }
+
+  tags = { Name = "novinano-private-subnets-route-table-1" }
+}
+
+
+resource "aws_route_table" "novinano-private-subnets-route-table-2" {
+  vpc_id = local.novinano_vpc_id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.novinano-public-1b.id
+  }
+
+  tags = { Name = "novinano-private-subnets-route-table-2" }
+}
+
+
 resource "aws_route_table_association" "association_public_subnet_a1" {
   subnet_id      = aws_subnet.novinano-public-subnet-a1.id
   route_table_id = aws_route_table.novinano-public-subnets-route-table.id
@@ -49,6 +73,17 @@ resource "aws_route_table_association" "association_public_subnet_b1" {
   route_table_id = aws_route_table.novinano-public-subnets-route-table.id
 }
 
+
+resource "aws_route_table_association" "association_private_subnet_a1" {
+  subnet_id      = aws_subnet.novinano-private-subnet-a1.id
+  route_table_id = aws_route_table.novinano-private-subnets-route-table-1.id
+}
+
+
+resource "aws_route_table_association" "association_private_subnet_b1" {
+  subnet_id      = aws_subnet.novinano-private-subnet-b1.id
+  route_table_id = aws_route_table.novinano-private-subnets-route-table-2.id
+}
 
 # public_subnets
 
