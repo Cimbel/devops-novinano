@@ -3,6 +3,8 @@ locals {
 }
 
 
+# vpc
+
 resource "aws_vpc" "novinano-vpc" {
   cidr_block           = "10.0.0.0/16"
   instance_tenancy     = "default"
@@ -13,12 +15,16 @@ resource "aws_vpc" "novinano-vpc" {
 }
 
 
+# internet_gateway
+
 resource "aws_internet_gateway" "novinano-igw" {
   vpc_id = local.novinano_vpc_id
 
   tags = { Name = "novinano-igw" }
 }
 
+
+# route_table
 
 resource "aws_route_table" "novinano-public-subnets-route-table" {
   vpc_id = local.novinano_vpc_id
@@ -43,6 +49,8 @@ resource "aws_route_table_association" "association_public_subnet_b1" {
   route_table_id = aws_route_table.novinano-public-subnets-route-table.id
 }
 
+
+# public_subnets
 
 resource "aws_subnet" "novinano-public-subnet-a1" {
   cidr_block              = "10.0.11.0/24"
