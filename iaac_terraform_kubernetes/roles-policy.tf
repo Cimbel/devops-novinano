@@ -37,6 +37,7 @@ resource "aws_iam_role_policy_attachment" "novinano-AmazonEKSVPCResourceControll
   role       = aws_iam_role.novinano-eks-cluster-role.name
 }
 
+
 # Policy for eks-cluster-node-group
 
 
