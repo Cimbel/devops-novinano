@@ -106,3 +106,15 @@ resource "aws_subnet" "novinano-private-subnet-b1" {
     "kubernetes.io/role/internal-elb" = 1
   }
 }
+
+
+# elastic ips for nat-gateways
+
+resource "aws_eip" "novinano-nat-1" {
+  depends_on = [aws_internet_gateway.novinano-igw]
+}
+
+
+resource "aws_eip" "novinano-nat-2" {
+  depends_on = [aws_internet_gateway.novinano-igw]
+}
