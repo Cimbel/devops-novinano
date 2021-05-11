@@ -4,3 +4,12 @@ provider "aws" {}
 data "aws_availability_zones" "available" {
   state = "available"
 }
+
+
+terraform {
+  backend "s3" {
+    bucket = "novinano-terraform-secrets"
+    key    = "terraform_secrets/terraform.tfstate"
+    region = "us-east-2"
+  }
+}
