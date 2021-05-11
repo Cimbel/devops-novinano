@@ -1,6 +1,7 @@
 resource "aws_eks_cluster" "novinano-eks-cluster" {
   name     = "novinano-eks-cluster"
   role_arn = aws_iam_role.novinano-eks-cluster-role.arn
+  version  = "1.19"
 
   vpc_config {
     endpoint_public_access = true
