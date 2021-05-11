@@ -4,11 +4,10 @@ resource "aws_eks_node_group" "novinano-eks-cluster-node-group" {
   node_role_arn   = aws_iam_role.novinano-eks-cluster-node-group-role.arn
   instance_types  = ["t3.small"]
   disk_size       = 8
-  capacity_type   = "ON_DEMAND"
 
   subnet_ids = [
-    aws_subnet.novinano-private-subnet-a1.id,
-    aws_subnet.novinano-private-subnet-b1.id
+    aws_subnet.novinano-public-subnet-a1.id,
+    aws_subnet.novinano-public-subnet-b1.id
   ]
 
   remote_access {

@@ -3,19 +3,13 @@ locals {
 }
 
 
-# vpc
-
 resource "aws_vpc" "novinano-vpc" {
-  cidr_block           = "10.0.0.0/16"
-  instance_tenancy     = "default"
-  enable_dns_support   = true
-  enable_dns_hostnames = true
+  cidr_block       = "10.0.0.0/16"
+  instance_tenancy = "default"
 
   tags = { Name = "novinano-vpc" }
 }
 
-
-# internet_gateway
 
 resource "aws_internet_gateway" "novinano-igw" {
   vpc_id = local.novinano_vpc_id
@@ -23,8 +17,6 @@ resource "aws_internet_gateway" "novinano-igw" {
   tags = { Name = "novinano-igw" }
 }
 
-
-# route_table
 
 resource "aws_route_table" "novinano-public-subnets-route-table" {
   vpc_id = local.novinano_vpc_id
@@ -35,30 +27,6 @@ resource "aws_route_table" "novinano-public-subnets-route-table" {
   }
 
   tags = { Name = "novinano-public-subnets-route-table" }
-}
-
-
-resource "aws_route_table" "novinano-private-subnets-route-table-1" {
-  vpc_id = local.novinano_vpc_id
-
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.novinano-public-1a.id
-  }
-
-  tags = { Name = "novinano-private-subnets-route-table-1" }
-}
-
-
-resource "aws_route_table" "novinano-private-subnets-route-table-2" {
-  vpc_id = local.novinano_vpc_id
-
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.novinano-public-1b.id
-  }
-
-  tags = { Name = "novinano-private-subnets-route-table-2" }
 }
 
 
@@ -74,30 +42,13 @@ resource "aws_route_table_association" "association_public_subnet_b1" {
 }
 
 
-resource "aws_route_table_association" "association_private_subnet_a1" {
-  subnet_id      = aws_subnet.novinano-private-subnet-a1.id
-  route_table_id = aws_route_table.novinano-private-subnets-route-table-1.id
-}
-
-
-resource "aws_route_table_association" "association_private_subnet_b1" {
-  subnet_id      = aws_subnet.novinano-private-subnet-b1.id
-  route_table_id = aws_route_table.novinano-private-subnets-route-table-2.id
-}
-
-# public_subnets
-
 resource "aws_subnet" "novinano-public-subnet-a1" {
   cidr_block              = "10.0.11.0/24"
   vpc_id                  = local.novinano_vpc_id
   map_public_ip_on_launch = true
   availability_zone       = data.aws_availability_zones.available.names[0]
 
-  tags = {
-    Name                        = "novinano-public-subnet-us-east-1a"
-    "kubernetes.io/cluster/eks" = "shared"
-    "kubernetes.io/role/elb"    = 1
-  }
+  tags = { Name = "novinano-public-subnet-a1" }
 }
 
 
@@ -107,67 +58,5 @@ resource "aws_subnet" "novinano-public-subnet-b1" {
   map_public_ip_on_launch = true
   availability_zone       = data.aws_availability_zones.available.names[1]
 
-  tags = {
-    Name                        = "novinano-public-subnet-us-east-1b"
-    "kubernetes.io/cluster/eks" = "shared"
-    "kubernetes.io/role/elb"    = 1
-  }
-}
-
-
-# private_subnets
-
-resource "aws_subnet" "novinano-private-subnet-a1" {
-  cidr_block        = "10.0.12.0/24"
-  vpc_id            = local.novinano_vpc_id
-  availability_zone = data.aws_availability_zones.available.names[0]
-
-  tags = {
-    Name                              = "novinano-private-subnet-us-east-1a"
-    "kubernetes.io/cluster/eks"       = "shared"
-    "kubernetes.io/role/internal-elb" = 1
-  }
-}
-
-
-resource "aws_subnet" "novinano-private-subnet-b1" {
-  cidr_block        = "10.0.22.0/24"
-  vpc_id            = local.novinano_vpc_id
-  availability_zone = data.aws_availability_zones.available.names[1]
-
-  tags = {
-    Name                              = "novinano-private-subnet-us-east-1b"
-    "kubernetes.io/cluster/eks"       = "shared"
-    "kubernetes.io/role/internal-elb" = 1
-  }
-}
-
-
-# elastic ips for nat-gateways
-
-resource "aws_eip" "novinano-nat-1" {
-  depends_on = [aws_internet_gateway.novinano-igw]
-}
-
-
-resource "aws_eip" "novinano-nat-2" {
-  depends_on = [aws_internet_gateway.novinano-igw]
-}
-
-
-# nat-gateways
-
-resource "aws_nat_gateway" "novinano-public-1a" {
-  allocation_id = aws_eip.novinano-nat-1.id
-  subnet_id     = aws_subnet.novinano-public-subnet-a1.id
-
-  tags = { Name = "nat-1a" }
-}
-
-
-resource "aws_nat_gateway" "novinano-public-1b" {
-  allocation_id = aws_eip.novinano-nat-2.id
-  subnet_id     = aws_subnet.novinano-public-subnet-b1.id
-
-  tags = { Name = "nat-1b" }
+  tags = { Name = "novinano-public-subnet-b1" }
 }

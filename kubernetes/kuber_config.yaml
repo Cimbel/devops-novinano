@@ -19,7 +19,7 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           value: root
       ports:
-        - containerPort: 3306   
+        - containerPort: 3306
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -67,16 +67,18 @@ kind: Service
 metadata:
   name: load-balancer-novinano
   labels:
-    project: novinano-project
+    proj: novinano-project
 spec:
   type: LoadBalancer
   selector:
     project: novinano-project
   ports:
-    - protocol: "TCP"
+    - name: "app-listener-80"
+      protocol: "TCP"
       port: 80
       targetPort: 80
-    - protocol: "TCP"
+    - name: "app-listener-443"
+      protocol: "TCP"
       port: 443
       targetPort: 443
 ---
