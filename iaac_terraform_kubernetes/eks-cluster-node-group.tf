@@ -11,6 +11,11 @@ resource "aws_eks_node_group" "novinano-eks-cluster-node-group" {
     aws_subnet.novinano-private-subnet-b1.id
   ]
 
+  remote_access {
+    ec2_ssh_key               = "Lesson1"
+    source_security_group_ids = [aws_security_group.novinano-sec-group.id]
+  }
+
   scaling_config {
     desired_size = 1
     max_size     = 1
