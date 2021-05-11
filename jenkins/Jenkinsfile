@@ -23,9 +23,23 @@ pipeline{
       steps{
         sh """
 	cd ./iaac_terraform_kubernetes
-	ls -la
-	pwd
+	terraform init
+	terraform apply -auto-approve
 	"""
+	sh "sleep 5"
+	sh "aws eks --region us-east-2 update-kubeconfig --name novinano-eks-cluster"
+      }
+    }
+
+    stage("deploying novinano"){
+      steps{
+	sh """
+	cd ./kubernetes
+	kubectl apply -f kuber_config.yaml
+	"""
+	sh "sleep 10"
+	sh "kubectl exec \$(kubectl get pods | grep novinano) -- chmod a+w /var/www/html"
+	sh "kubectl describe pods | grep IP | head -n 1"
       }
     }
 
