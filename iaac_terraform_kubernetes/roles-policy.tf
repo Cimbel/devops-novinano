@@ -26,18 +26,6 @@ resource "aws_iam_role_policy_attachment" "novinano-AmazonEKSClusterPolicy" {
 }
 
 
-resource "aws_iam_role_policy_attachment" "novinano-AmazonEKSServicePolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-  role       = aws_iam_role.novinano-eks-cluster-role.name
-}
-
-
-resource "aws_iam_role_policy_attachment" "novinano-AmazonEKSVPCResourceController" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
-  role       = aws_iam_role.novinano-eks-cluster-role.name
-}
-
-
 # Policy for eks-cluster-node-group
 
 
