@@ -19,6 +19,12 @@ pipeline{
       }
     }
 
+    stage("build eks kubernetes cluster"){
+      steps{
+        sh "cd ~/iaac_terraform_kubernetes && pwd"
+      }
+    }
+
     stage("clean workspace"){
       steps{
         sh "docker rmi gotechnies/php-5.6-alpine:latest"
