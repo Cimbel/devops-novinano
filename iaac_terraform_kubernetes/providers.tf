@@ -1,4 +1,6 @@
-provider "aws" {}
+provider "aws" {
+  region = "us-east-2"
+}
 
 # shows all availability zones in the current region
 data "aws_availability_zones" "available" {
