@@ -19,5 +19,7 @@ resource "aws_eks_cluster" "novinano-eks-cluster" {
 
   depends_on = [
     aws_iam_role_policy_attachment.novinano-AmazonEKSClusterPolicy,
+    aws_iam_role_policy_attachment.novinano-AmazonEKSServicePolicy,
+    aws_iam_role_policy_attachment.novinano-AmazonEKSVPCResourceController
   ]
 }
