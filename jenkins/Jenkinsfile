@@ -21,8 +21,7 @@ pipeline{
 
     stage("build eks kubernetes cluster"){
       steps{
-        sh "cd ./iaac_terraform_kubernetes"
-	sh "ls -la"
+        sh "cd ./iaac_terraform_kubernetes && ls -la"
       }
     }
 
