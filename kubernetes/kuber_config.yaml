@@ -67,17 +67,16 @@ kind: Service
 metadata:
   name: load-balancer-novinano
   labels:
-    proj: novinano-proj
+    project: novinano-project
 spec:
+  type: LoadBalancer
   selector:
     project: novinano-project
   ports:
-    - name: "app-listener-http"
-      protocol: "TCP"
+    - protocol: "TCP"
       port: 80
       targetPort: 80
-    - name: "app-listener-https"
-      protocol: "TCP"
+    - protocol: "TCP"
       port: 443
       targetPort: 443
 ---
