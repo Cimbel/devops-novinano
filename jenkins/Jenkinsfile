@@ -39,14 +39,7 @@ pipeline{
 	"""
 	sh "sleep 60"
 	sh "kubectl exec deployment/novinano-deployment -- chmod a+w /var/www/html"
-	sh """
-	cd ./kubernetes
-	chmod +x ./get_ip_db.sh
-	./get_ip_db.sh
-	bash
-	"""
 	sh "kubectl describe pods | grep IP | head -n 1"
-	slackSend color: '#FFFF00', message: "IP_DATABASE   --->   '$ipdb'"
       }
     }
 
