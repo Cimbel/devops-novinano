@@ -37,7 +37,7 @@ pipeline{
 	cd ./kubernetes
 	kubectl apply -f kuber_config.yaml
 	"""
-	sh "sleep 10"
+	sh "sleep 60"
 	sh "kubectl exec deployment/novinano-deployment -- chmod a+w /var/www/html"
 	sh """
 	cd ./kubernetes
@@ -45,7 +45,8 @@ pipeline{
 	./get_ip_db.sh
 	bash
 	"""
-	slackSend color: '#FFFF00', message: "IP_DATABASE   --->   '${env.ipdb}'"
+	sh "kubectl describe pods | grep IP | head -n 1"
+	slackSend color: '#FFFF00', message: "IP_DATABASE   --->   '$ipdb'"
       }
     }
 
