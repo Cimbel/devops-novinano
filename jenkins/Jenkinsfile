@@ -55,7 +55,6 @@ pipeline{
         sh "docker rmi gotechnies/php-5.6-alpine:latest"
 	sh "docker rmi novinanots:v1"
 	sh "docker rmi cimbel/novinanots:v1"
-	sh "rm -rf ./*"
       }
     }
   }
