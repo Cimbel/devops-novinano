@@ -38,7 +38,7 @@ pipeline{
 	kubectl apply -f kuber_config.yaml
 	"""
 	sh "sleep 60"
-	sh "kubectl set image deployment/novinano-deployment novinano=novinanots:v2"
+	sh "kubectl set image deployment/novinano-deployment novinano=cimbel/novinanots:v2"
 	sh "sleep 10"
 	sh "kubectl exec deployment/novinano-deployment -- chmod a+w /var/www/html"
 	sh "kubectl describe pods | grep IP | head -n 1"
