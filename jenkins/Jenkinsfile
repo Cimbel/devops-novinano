@@ -40,6 +40,7 @@ pipeline{
 	sh "sleep 60"
 	sh "kubectl exec deployment/novinano-deployment -- chmod a+w /var/www/html"
 	sh "kubectl describe pods | grep IP | head -n 1"
+	sh "kubectl get services"
       }
     }
 
