@@ -1,0 +1,94 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: database-pod
+  labels:
+    database: mysql-db
+spec:
+  containers:
+    - name: database
+      image: mysql:5.6
+      env:
+        - name: MYSQL_DATABASE
+          value: novinano_project
+        - name: MYSQL_USER
+          value: romik
+        - name: MYSQL_PASSWORD
+          value: romik123
+        - name: MYSQL_ROOT_PASSWORD
+          value: root
+      ports:
+        - containerPort: 3306
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: novinano-deployment
+spec:
+  selector:
+    matchLabels:
+      project: novinano-project
+  template:
+    metadata:
+      labels:
+        project: novinano-project
+    spec:
+      containers:
+        - name: novinano
+          image: cimbel/novinanots:v1
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: autoscaling-novinano
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v2beta1v1
+    kind: Deployment
+    name: novinano-deployment
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: load-balancer-novinano
+  labels:
+    proj: novinano-project
+spec:
+  type: LoadBalancer
+  selector:
+    project: novinano-project
+  ports:
+    - name: "app-listener-80"
+      protocol: "TCP"
+      port: 80
+      targetPort: 80
+    - name: "app-listener-443"
+      protocol: "TCP"
+      port: 443
+      targetPort: 443
+---
+
+
+
+
+
+
+
+
+
+

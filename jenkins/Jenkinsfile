@@ -1,0 +1,67 @@
+pipeline{
+  agent{ label 'docker' }
+
+  stages{
+    stage("build docker image"){
+
+      environment{
+	DOCKER_USER = credentials('docker-username')
+	DOCKER_PASS = credentials('docker-password')
+      }
+
+      steps{
+       slackSend color: '#FFFF00', message: "STARTED   :large_yellow_square:   --->   Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+       sh "docker login -u \$DOCKER_USER -p \$DOCKER_PASS"
+       sh "docker build -t novinanots:v2 ./docker"
+       sh "docker tag novinanots:v2 \$DOCKER_USER/novinanots:v2"
+       sh "docker push \$DOCKER_USER/novinanots:v2"
+       sh "docker logout"
+      }
+    }
+
+    stage("build eks kubernetes cluster"){
+      steps{
+        sh """
+	cd ./iaac_terraform_kubernetes
+	terraform init
+	terraform apply -auto-approve
+	"""
+	sh "sleep 5"
+	sh "aws eks --region us-east-2 update-kubeconfig --name novinano-eks-cluster"
+      }
+    }
+
+    stage("deploying novinano"){
+      steps{
+	sh """
+	cd ./kubernetes
+	kubectl apply -f kuber_config.yaml
+	"""
+	sh "sleep 60"
+	sh "kubectl set image deployment/novinano-deployment novinano=cimbel/novinanots:v2"
+	sh "sleep 10"
+	sh "kubectl exec deployment/novinano-deployment -- chmod a+w /var/www/html"
+	sh "kubectl describe pods | grep IP | head -n 1"
+	sh "kubectl get services"
+      }
+    }
+
+    stage("clean workspace"){
+      steps{
+        sh "docker rmi gotechnies/php-5.6-alpine:latest"
+	sh "docker rmi novinanots:v2"
+	sh "docker rmi cimbel/novinanots:v2"
+      }
+    }
+  }
+
+  post {
+    success{
+      slackSend color: '#00ff37', message: "SUCCESS   :large_green_square:   --->   Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
+      }
+
+    failure{
+      slackSend color: '#FF0000', message: "FAILED   :large_red_square:   --->   Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
+    }
+  }
+}
