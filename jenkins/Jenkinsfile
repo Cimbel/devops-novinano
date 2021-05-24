@@ -12,9 +12,9 @@ pipeline{
       steps{
        slackSend color: '#FFFF00', message: "STARTED   :large_yellow_square:   --->   Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
        sh "docker login -u \$DOCKER_USER -p \$DOCKER_PASS"
-       sh "docker build -t novinanots:v2 ./docker"
-       sh "docker tag novinanots:v2 \$DOCKER_USER/novinanots:v2"
-       sh "docker push \$DOCKER_USER/novinanots:v2"
+       sh "docker build -t novinanots:v1 ./docker"
+       sh "docker tag novinanots:v1 \$DOCKER_USER/novinanots:v1"
+       sh "docker push \$DOCKER_USER/novinanots:v1"
        sh "docker logout"
       }
     }
@@ -38,8 +38,6 @@ pipeline{
 	kubectl apply -f kuber_config.yaml
 	"""
 	sh "sleep 60"
-	sh "kubectl set image deployment/novinano-deployment novinano=cimbel/novinanots:v2"
-	sh "sleep 10"
 	sh "kubectl exec deployment/novinano-deployment -- chmod a+w /var/www/html"
 	sh "kubectl describe pods | grep IP | head -n 1"
 	sh "kubectl get services"
